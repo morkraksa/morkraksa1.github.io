@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="Calculator Style.css">
+</head>
+<body>
+    <div class="form">
+        <div class="input-box">
+            <input id="output" type="text" placeholder="0" onkeypress="return Num_only(event)" maxlength="13">
+        </div>
+        <div class="button-box">
+            <button id="opBar"   onclick="Clear('')">AC</button>
+            <button id="opBar"     onclick="Delete()">Del</button>
+            <button id="opBar"  onclick="Display('%')">%</button>
+            <button id="operate"     onclick="Display('+')">+</button>
+            <button id="display" onclick="Display('7')">7</button>
+            <button id="display" onclick="Display('8')">8</button>
+            <button id="display" onclick="Display('9')">9</button>
+            <button id="operate"     onclick="Display('-')">-</button>
+            <button id="display" onclick="Display('6')">6</button>
+            <button id="display" onclick="Display('5')">5</button>
+            <button id="display" onclick="Display('4')">4</button>
+            <button id="operate"     onclick="Display('*')">x</button>
+            <button id="display" onclick="Display('1')">1</button>
+            <button id="display" onclick="Display('2')">2</button>
+            <button id="display" onclick="Display('3')">3</button>
+            <button id="operate"  onclick="Display('/')">/</button>
+            <button id="zero"    onclick="Display('0')">0</button>
+            <button id="dot"     onclick="Display('.')">.</button>
+            <button id="equal"   onclick="calculate()">=</button>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let calculationPerformed = false
+    function Num_only(e) {
+        var x = e.which || e.keycode;
+        if(x >= 48 && x <= 57 || x == 46)
+            return true;
+        else 
+            return false;
+    }  
+    function Clear(value) {
+        document.getElementById('output').value = value;
+    }
+
+    function Delete() {
+        var currentValue = document.getElementById('output').value;
+        document.getElementById('output').value = currentValue.slice(0, -1);
+    }
+
+    function Display(value, button) {
+        var currentInput = document.getElementById('output').value;
+
+        if (calculationPerformed) {
+            // If a calculation has been performed, start a new expression
+            document.getElementById('output').value = value;
+            calculationPerformed = false;
+        } else if (value.match(/[+\-*/%]/) && currentInput.match(/[+\-*/%]$/)) {
+            // If the last character is an operator and the new value is an operator, replace the last one
+            document.getElementById('output').value = currentInput.slice(0, -1) + value;
+        } else {
+            document.getElementById('output').value += value;
+        }
+        if (newInput.length <= 13) {
+                document.getElementById('output').value = newInput;
+                
+                disableOperatorButtons(button);
+            }
+    }
+
+    function calculate() {
+        try {
+            // Use eval() to perform the calculation
+            document.getElementById('output').value = eval(document.getElementById('output').value);
+        } catch (error) {
+            document.getElementById('output').value = 'Error';
+        }
+    }
+
+    function disableOperatorButtons(clickedButton) {
+        var operatorButtons = document.querySelectorAll('.operator');
+        var numberButtons = document.querySelectorAll('.display');
+        operatorButtons.forEach(function (button) {
+            button.disabled = true;
+        });
+        clickedButton.disabled = false;
+    }
+</script>
